@@ -1,0 +1,80 @@
+﻿<Window x:Class="TaskManagerUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Менеджер задач" Height="550" Width="1000"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Панель управления -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                <TextBox x:Name="TxtTitle" Width="150" Margin="5" ToolTip="Название"/>
+                <TextBox x:Name="TxtDescription" Width="200" Margin="5" ToolTip="Описание"/>
+                <ComboBox x:Name="CmbPriority" Width="100" Margin="5" SelectedIndex="1"/>
+                <DatePicker x:Name="DpDueDate" Width="120" Margin="5"/>
+                <ComboBox x:Name="CmbStatus" Width="100" Margin="5" SelectedIndex="0"/>
+                <CheckBox x:Name="ChkImportant" Content="Важная" Margin="5" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="BtnAdd" Content="Добавить" Click="BtnAdd_Click" Margin="5" Padding="10,5"/>
+                <Button x:Name="BtnEdit" Content="Редактировать" Click="BtnEdit_Click" Margin="5" Padding="10,5"/>
+                <Button x:Name="BtnDelete" Content="Удалить" Click="BtnDelete_Click" Margin="5" Padding="10,5"/>
+                <Separator Width="10"/>
+                <Button x:Name="BtnSave" Content="Сохранить" Click="BtnSave_Click" Margin="5" Padding="10,5"/>
+                <Button x:Name="BtnLoad" Content="Загрузить" Click="BtnLoad_Click" Margin="5" Padding="10,5"/>
+                <Separator Width="10"/>
+                <TextBox x:Name="TxtSearch" Width="150" Margin="5" ToolTip="Поиск по названию/описанию"/>
+                <Button x:Name="BtnSearch" Content="Искать" Click="BtnSearch_Click" Margin="5" Padding="10,5"/>
+                <ComboBox x:Name="CmbFilterStatus" Width="120" Margin="5" SelectedIndex="0"/>
+                <Button x:Name="BtnFilter" Content="Фильтр" Click="BtnFilter_Click" Margin="5" Padding="10,5"/>
+                <Separator Width="10"/>
+                <Button x:Name="BtnSortPriority" Content="По приоритету" Click="BtnSortPriority_Click" Margin="5" Padding="10,5"/>
+                <Button x:Name="BtnSortDueDate" Content="По сроку" Click="BtnSortDueDate_Click" Margin="5" Padding="10,5"/>
+                <Button x:Name="BtnStats" Content="Статистика" Click="BtnStats_Click" Margin="5" Padding="10,5"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Список задач -->
+        <ListView x:Name="LvTasks" Grid.Row="1" Margin="5" SelectionChanged="LvTasks_SelectionChanged">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" Width="40"/>
+                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Title}" Width="140"/>
+                    <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding Description}" Width="200"/>
+                    <GridViewColumn Header="Приоритет" DisplayMemberBinding="{Binding Priority}" Width="80"/>
+                    <GridViewColumn Header="Срок" DisplayMemberBinding="{Binding DueDate, StringFormat=d}" Width="100"/>
+                    <GridViewColumn Header="Статус" DisplayMemberBinding="{Binding Status}" Width="100"/>
+                    <GridViewColumn Header="Важная" Width="60">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <!-- Звёздочка через DataTrigger (без конвертера) -->
+                                <TextBlock Text="★" FontSize="16" Foreground="Gold">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsImportant}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!-- Строка статистики -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="5">
+            <TextBlock x:Name="TblStats" VerticalAlignment="Center" FontWeight="Bold"/>
+        </StackPanel>
+    </Grid>
+</Window>
